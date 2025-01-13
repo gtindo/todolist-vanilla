@@ -3,11 +3,23 @@ import { createEffect, createSignal } from "../shared/signals";
 import { attachTemplate, getTargetElements, html } from "../shared/templates";
 
 class Home extends HTMLElement {
-  static targets = ["tasksList", "loader"];
+  static targets = [
+    "tasksList",
+    "loader",
+    "searchBar",
+    "startDate",
+    "endDate",
+    "filterForm",
+  ];
 
   constructor() {
     super();
-    this.tasks = createSignal([]);
+    // tasks list fetched from the server
+    this.tasks = [];
+
+    // tasks list displayed on the page
+    this.displayedTasks = createSignal([]);
+
     this.loading = createSignal(true);
 
     this.elements = {};
@@ -17,8 +29,8 @@ class Home extends HTMLElement {
     attachTemplate(this, this.template());
     this.elements = getTargetElements(this.shadowRoot, Home.targets);
 
-    // detect changes on task list and displays new list
-    createEffect(this.tasks, (tasks) => {
+    // detect changes on displayed list and displays new list
+    createEffect(this.displayedTasks, (tasks) => {
       this.elements.tasksList.innerHTML = "";
       const list = document.createElement("ul");
 
@@ -41,24 +53,85 @@ class Home extends HTMLElement {
 
     this.shadowRoot.addEventListener("task-deleted", (e) => {
       const label = e.detail;
-      this.tasks.update((tasks) =>
-        tasks.filter((task) => task.label !== label),
-      );
+      this.deleteTask(label);
     });
+
+    this.elements.filterForm.onsubmit = (e) => {
+      e.preventDefault();
+      this.filterTasks();
+    };
+
+    this.elements.filterForm.onreset = () => {
+      this.resetFilters();
+    };
 
     this.load();
   }
 
+  deleteTask(label) {
+    this.tasks = this.tasks.filter((task) => task.label !== label);
+    const labels = this.tasks.map((task) => task.label);
+
+    // update displayed tasks, it preserves the order and applied filters when deleting a task
+    this.displayedTasks.update((tasks) =>
+      tasks.filter((task) => labels.includes(task.label)),
+    );
+  }
+
+  resetFilters() {
+    this.displayedTasks.set(this.tasks);
+  }
+
+  filterTasks() {
+    const search = this.elements.searchBar.value;
+    const startDate = this.elements.startDate.value;
+    const endDate = this.elements.endDate.value;
+
+    let filteredTasks = this.tasks;
+
+    if (search) {
+      filteredTasks = filteredTasks.filter((task) =>
+        task.label.toLowerCase().includes(search.toLowerCase()),
+      );
+    }
+
+    if (startDate) {
+      filteredTasks = filteredTasks.filter(
+        (task) => new Date(task.start_date) >= new Date(startDate),
+      );
+    }
+
+    if (endDate) {
+      filteredTasks = filteredTasks.filter(
+        (task) => new Date(task.end_date) <= new Date(endDate),
+      );
+    }
+
+    this.displayedTasks.set(filteredTasks);
+  }
+
   async load() {
     this.loading.set(true);
-    const tasks = await getTasks();
-    this.tasks.set(tasks);
+    this.tasks = await getTasks();
+    this.displayedTasks.set(this.tasks);
     this.loading.set(false);
   }
 
   template() {
     return html`
-      <section>Search bar</section>
+      <section>
+        <form data-target="filterForm">
+          <input
+            data-target="searchBar"
+            type="text"
+            placeholder="Search tasks"
+          />
+          <input data-target="startDate" type="date" />
+          <input data-target="endDate" type="date" />
+          <input type="submit" value="Filter" />
+          <input type="reset" value="Reset" />
+        </form>
+      </section>
 
       <section>
         <x-link to="/tasks/new">Create new task</x-link>

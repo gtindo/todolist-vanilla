@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:9000/v1/tasks";
+const BASE_URL = "http://localhost:9000/v1";
 
 /**
  * @typedef {Object} Task
@@ -13,11 +13,34 @@ const BASE_URL = "http://localhost:9000/v1/tasks";
  * @returns {Promise<Array<Task>>}
  */
 export async function getTasks() {
-  const response = await fetch(BASE_URL);
+  const response = await fetch(`${BASE_URL}/tasks`);
   if (!response.body) return [];
   const tasks = await response.json();
 
   return tasks;
 }
 
-export async function createTask(task) {}
+/**
+ * @typedef {Object} AddTask
+ * @property {string} label
+ * @property {string} description
+ * @property {string} start_date
+ */
+
+/**
+ * Create a task
+ * @param {AddTask} task
+ */
+export async function createTask(task) {
+  const response = await fetch(`${BASE_URL}/tasks`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(task),
+  });
+
+  if (response.status !== 201) {
+    throw new Error("Failed to create task");
+  }
+}

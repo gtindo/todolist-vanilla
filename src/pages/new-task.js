@@ -31,7 +31,7 @@ class NewTasksPage extends HTMLElement {
     return html`
       <h1>New Task</h1>
       <x-link to="/">Back to tasks</x-link>
-      <x-task-form></x-task-form>
+      <x-task-form data-target="taskForm"></x-task-form>
     `;
   }
 }

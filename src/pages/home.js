@@ -24,8 +24,11 @@ class Home extends HTMLElement {
 
       tasks.forEach((task) => {
         let item = document.createElement("li");
-        item.textContent = task.label;
         list.appendChild(item);
+
+        const taskElement = document.createElement("x-task");
+        taskElement.setAttribute("label", task.label);
+        item.appendChild(taskElement);
       });
 
       this.elements.tasksList.appendChild(list);
@@ -34,6 +37,13 @@ class Home extends HTMLElement {
     // Detect changes on loading state and display / hide loader
     createEffect(this.loading, (loading) => {
       this.elements.loader.style.display = loading ? "block" : "none";
+    });
+
+    this.shadowRoot.addEventListener("task-deleted", (e) => {
+      const label = e.detail;
+      this.tasks.update((tasks) =>
+        tasks.filter((task) => task.label !== label),
+      );
     });
 
     this.load();

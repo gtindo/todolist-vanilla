@@ -101,7 +101,7 @@ export async function deleteTask(taskLabel) {
     method: "DELETE",
   });
 
-  if (response.status !== 204) {
+  if (response.status !== 200) {
     throw new ApiError("Failed to delete task", response.status);
   }
 }

@@ -4,15 +4,8 @@
  * Basic usage:
  * ```html
  *    <x-router>
- *      <x-route path="/">
- *        Home Page
- *        <x-link to="/about">About</x-link>
- *      </x-route>
- *
- *      <x-route path="/about">
- *        About Page
- *        <x-link to="/">Home</x-link>
- *      </x-route>
+ *      <x-route path="/" component="x-page-1"></x-route>
+ *      <x-route path="/about" component="x-page-2"></x-route>
  *    </x-router>
  * ```
  */
@@ -56,7 +49,10 @@ class Router extends HTMLElement {
     // Set the first matched route as the element to display
     if (matchedRoutes.length > 0) {
       this.elements.outlet.innerHTML = "";
-      this.elements.outlet.appendChild(matchedRoutes[0]);
+      const matchedRoute = matchedRoutes[0].cloneNode(true); // To avoid moving the element from its original position in the DOM
+      matchedRoute.setAttribute("is-active", "true");
+
+      this.elements.outlet.appendChild(matchedRoute);
     }
   }
 
@@ -87,7 +83,7 @@ class Router extends HTMLElement {
  */
 class Route extends HTMLElement {
   static get observedAttributes() {
-    return ["path"];
+    return ["path", "component", "is-active"];
   }
 
   constructor() {
@@ -95,6 +91,21 @@ class Route extends HTMLElement {
   }
 
   connectedCallback() {}
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    switch (name) {
+      case "is-active":
+        if (newValue === "true") {
+          const component = document.createElement(
+            this.getAttribute("component"),
+          );
+          this.appendChild(component);
+        }
+        break;
+      default:
+        break;
+    }
+  }
 
   /**
    * @typedef {Object} UrlPart
@@ -155,10 +166,6 @@ class Route extends HTMLElement {
     }
 
     return true;
-  }
-
-  template() {
-    return html` <slot></slot> `;
   }
 }
 

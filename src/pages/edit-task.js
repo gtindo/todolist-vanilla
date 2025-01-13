@@ -83,4 +83,4 @@ class TaskDetailPage extends HTMLElement {
   }
 }
 
-customElements.define("x-task-detail-page", TaskDetailPage);
+customElements.define("x-edit-task-page", TaskDetailPage);

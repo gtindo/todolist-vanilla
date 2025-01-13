@@ -13,11 +13,8 @@
 export function attachTemplate(element, content) {
   const template = document.createElement("template");
   template.innerHTML = content;
-
-  if (!element.shadowRoot) {
-    element.attachShadow({ mode: "open" });
-    element.shadowRoot.appendChild(template.content.cloneNode(true));
-  }
+  element.attachShadow({ mode: "open" });
+  element.shadowRoot.appendChild(template.content.cloneNode(true));
 }
 
 /**

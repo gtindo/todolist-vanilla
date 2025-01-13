@@ -18,17 +18,9 @@
   </head>
   <body>
     <x-router>
-      <x-route path="/">
-        <x-home-page></x-home-page>
-      </x-route>
-
-      <x-route path="/tasks/new">
-        <x-new-task-page></x-new-task-page>
-      </x-route>
-
-      <x-route path="/tasks/:taskLabel">
-        <x-task-detail-page></x-task-detail-page>
-      </x-route>
+      <x-route path="/" component="x-tasks-page"></x-route>
+      <x-route path="/tasks/new" component="x-new-task-page"></x-route>
+      <x-route path="/tasks/:taskLabel" component="x-edit-task-page"></x-route>
     </x-router>
   </body>
 </html>

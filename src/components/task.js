@@ -5,7 +5,7 @@ class Task extends HTMLElement {
   static targets = ["deleteBtn"];
 
   static get observedAttributes() {
-    return ["label"];
+    return ["label", "expired"];
   }
 
   constructor() {

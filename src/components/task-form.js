@@ -11,7 +11,7 @@ class TaskForm extends HTMLElement {
   ];
 
   static get observedAttributes() {
-    return ["label", "descripttion", "start-date", "end-date"];
+    return ["label", "description", "start-date", "end-date", "edit"];
   }
 
   constructor() {
@@ -23,9 +23,15 @@ class TaskForm extends HTMLElement {
     attachTemplate(this, this.template());
     this.elements = getTargetElements(this.shadowRoot, TaskForm.targets);
 
-    const hasEndDate = this.getAttribute("end-date") !== null;
-    if (!hasEndDate) {
+    if (!this.hasAttribute("edit")) {
       this.elements.endDate.style.display = "none";
+    }
+
+    if (this.hasAttribute("edit")) {
+      this.elements.submitBtn.value = "Update Task";
+      this.elements.label.setAttribute("disabled", "");
+      this.elements.startDate.setAttribute("disabled", "");
+      this.elements.description.setAttribute("disabled", "");
     }
 
     this.elements.form.onsubmit = (e) => {
@@ -37,7 +43,7 @@ class TaskForm extends HTMLElement {
         start_date: new Date(this.elements.startDate.value).toISOString(),
       };
 
-      if (hasEndDate) {
+      if (this.elements.endDate.value) {
         task.end_date = new Date(this.elements.endDate.value).toISOString();
       }
 
@@ -49,20 +55,33 @@ class TaskForm extends HTMLElement {
     };
   }
 
+  attributeChangedCallback(name, oldValue, newValue) {
+    switch (name) {
+      case "label":
+        this.elements.label.value = newValue;
+        break;
+      case "description":
+        this.elements.description.value = newValue;
+        break;
+      case "start-date":
+        this.elements.startDate.value = newValue;
+        break;
+      case "end-date":
+        this.elements.endDate.value = newValue;
+        break;
+    }
+  }
+
   template() {
     return html`
       <form data-target="form" method="post" action "/">
         <input data-target="label" type="text" value="${this.getAttribute("label")}" placeholder="Task label" required/>
-        <input
+        <textarea
           data-target="description"
-          type="text"
-          placeholder="Task description"
-          value="${this.getAttribute("description")}"
           required
-        />
+        >${this.getAttribute("description")}</textarea>
         <input data-target="startDate" value="${this.getAttribute("start-date")}" type="date" required />
-        <input data-target="endDate" value="${this.getAttribute("end-date")}" type="date" />
-
+        <input data-target="endDate" value="${this.getAttribute("end-date")}" required type="date" />
         <input data-target="submitBtn" type="submit" value="Create Task" />
       </form>
     `;

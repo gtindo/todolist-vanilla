@@ -8,6 +8,6 @@ import "./components/task-form";
 import "./components/task";
 
 // Register custom elements pages
-import "./pages/home";
+import "./pages/tasks";
 import "./pages/new-task";
-import "./pages/task-detail";
+import "./pages/edit-task";

@@ -4,10 +4,31 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="/src/main.js"></script>
+
+    <!-- Workaround to avoid FOUC (Flash of Unstyled Content) for routes -->
+    <style>
+      x-route {
+        display: none;
+      }
+    </style>
+    <!-- end -->
+
     <title>Vite App</title>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+    <x-router>
+      <x-route path="/">
+        <x-home-page></x-home-page>
+      </x-route>
+
+      <x-route path="/tasks/new">
+        <x-new-task-page></x-new-task-page>
+      </x-route>
+
+      <x-route path="/tasks/:taskLabel">
+        <x-task-detail-page></x-task-detail-page>
+      </x-route>
+    </x-router>
   </body>
 </html>

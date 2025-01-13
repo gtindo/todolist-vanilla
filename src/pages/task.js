@@ -1,6 +1,6 @@
 import { attachTemplate, html } from "../shared/templates";
 
-class NewTasksPage extends HTMLElement {
+class TaskDetailPage extends HTMLElement {
   constructor() {
     super();
   }
@@ -11,12 +11,15 @@ class NewTasksPage extends HTMLElement {
 
   template() {
     return html`
-      <h1>New Task</h1>
-      <p>Form to create a new task</p>
+      <h1>Task Detail</h1>
+      <p>Task Detail</p>
 
       <x-link to="/">Back to tasks</x-link>
+
+      <button>Delete Task</button>
+      <button>Edit Task</button>
     `;
   }
 }
 
-customElements.define("x-new-task-page", NewTasksPage);
+customElements.define("x-task-detail-page", TaskDetailPage);

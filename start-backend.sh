@@ -1,0 +1,1 @@
+./backend/todolist_linux_amd64

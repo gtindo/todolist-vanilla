@@ -20,6 +20,8 @@ npm run dev
 
 It opens on port [http://localhos:5173](http://localhost:5173)
 
+![rendu]('./capture.png')
+
 ## File structure
 
 - `public`: static assets

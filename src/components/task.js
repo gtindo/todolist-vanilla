@@ -6,7 +6,7 @@ class Task extends HTMLElement {
   static targets = ["deleteBtn"];
 
   static get observedAttributes() {
-    return ["label", "end-date", "expired"];
+    return ["label", "expired"];
   }
 
   constructor() {
@@ -40,7 +40,6 @@ class Task extends HTMLElement {
   template() {
     const label = this.getAttribute("label");
     const isExpired = this.getAttribute("expired", "true");
-    const endDate = this.getAttribute("end-date");
 
     return html`
       <div
@@ -51,7 +50,6 @@ class Task extends HTMLElement {
         </div>
 
         <div>
-          <span class="mr-4">Due ${toDateString(new Date(endDate))}</span>
           <x-link to="/tasks/${label}">
             <svg
               width="21"

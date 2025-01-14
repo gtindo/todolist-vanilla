@@ -8,6 +8,7 @@ class TaskForm extends HTMLElement {
     "submitBtn",
     "startDate",
     "endDate",
+    "endDateField",
   ];
 
   static get observedAttributes() {
@@ -25,10 +26,12 @@ class TaskForm extends HTMLElement {
 
     if (!this.hasAttribute("edit")) {
       this.elements.endDate.style.display = "none";
+      this.elements.endDateField.style.display = "none";
     }
 
     if (this.hasAttribute("edit")) {
       this.elements.submitBtn.value = "Update Task";
+      this.elements.endDate.setAttribute("required", "");
       this.elements.label.setAttribute("disabled", "");
       this.elements.startDate.setAttribute("disabled", "");
       this.elements.description.setAttribute("disabled", "");
@@ -75,14 +78,34 @@ class TaskForm extends HTMLElement {
   template() {
     return html`
       <form data-target="form" method="post" action "/">
-        <input data-target="label" type="text" value="${this.getAttribute("label")}" placeholder="Task label" required/>
-        <textarea
-          data-target="description"
-          required
-        >${this.getAttribute("description")}</textarea>
-        <input data-target="startDate" value="${this.getAttribute("start-date")}" type="date" required />
-        <input data-target="endDate" value="${this.getAttribute("end-date")}" required type="date" />
-        <input data-target="submitBtn" type="submit" value="Create Task" />
+
+        <div classs="field mt-2">
+          <label class="label" for="label">Task label</label>
+          <input data-target="label" id="label" class="input is-normal" type="text" value="${this.getAttribute("label")}" placeholder="Task label" required/>
+        </div>
+        <div class="field mt-2">
+          <label class="label" for="description">Description</label>
+          <textarea
+            id="description"
+            data-target="description"
+            class="textarea"
+            required
+          >${this.getAttribute("description")}</textarea>
+        </div>
+        
+        <div class="field mt-2">
+          <label class="label" for="start-date">Start date</label>
+          <input data-target="startDate" class="input is-normal" id="start-date" placeholder="Start date" value="${this.getAttribute("start-date")}" type="date" required />
+        </div>
+
+        <div class="field mt-2" data-target="endDateField">
+          <label class="label" for="end-date">End date</label>
+          <input data-target="endDate" class="input is-normal" id="end-date" value="${this.getAttribute("end-date")}" placeholder="End date" type="date" />
+        </div>
+
+        <div class="field mt-2">
+          <input data-target="submitBtn" class="button is-link" type="submit" value="Create Task" />
+        </div>
       </form>
     `;
   }

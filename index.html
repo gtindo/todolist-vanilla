@@ -1,8 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="/styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="module" src="/src/main.js"></script>
 
@@ -17,10 +18,23 @@
     <title>Vite App</title>
   </head>
   <body>
-    <x-router>
-      <x-route path="/" component="x-tasks-page"></x-route>
-      <x-route path="/tasks/new" component="x-new-task-page"></x-route>
-      <x-route path="/tasks/:taskLabel" component="x-edit-task-page"></x-route>
-    </x-router>
+    <main class="container p-4">
+      <header>
+        <h1 class="is-size-3 is-flex is-justify-content-center">
+          Todo List App
+        </h1>
+      </header>
+
+      <hr />
+
+      <x-router>
+        <x-route path="/" component="x-tasks-page"></x-route>
+        <x-route path="/tasks/new" component="x-new-task-page"></x-route>
+        <x-route
+          path="/tasks/:taskLabel"
+          component="x-edit-task-page"
+        ></x-route>
+      </x-router>
+    </main>
   </body>
 </html>

@@ -1,0 +1,38 @@
+@import url("https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
+
+.w-700 {
+  width: 700px;
+}
+
+.flex-responsive {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.visible-mobile {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .w-700 {
+    width: 100%;
+  }
+
+  .flex-responsive {
+    display: block;
+  }
+
+  .hidden-mobile {
+    display: none;
+  }
+
+  .visible-mobile {
+    display: block;
+  }
+}
+
+.red {
+  color: red;
+}

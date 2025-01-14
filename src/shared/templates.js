@@ -14,6 +14,12 @@ export function attachTemplate(element, content) {
   const template = document.createElement("template");
   template.innerHTML = content;
   element.attachShadow({ mode: "open" });
+
+  const styleLink = document.createElement("link");
+  styleLink.rel = "stylesheet";
+  styleLink.href = "/styles.css";
+
+  element.shadowRoot.appendChild(styleLink);
   element.shadowRoot.appendChild(template.content.cloneNode(true));
 }
 

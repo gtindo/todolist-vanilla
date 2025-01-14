@@ -1,4 +1,5 @@
 import { createTask } from "../services/tasks";
+import { navigateTo } from "../shared/router";
 import { attachTemplate, html, getTargetElements } from "../shared/templates";
 
 class NewTasksPage extends HTMLElement {
@@ -25,13 +26,18 @@ class NewTasksPage extends HTMLElement {
 
   async handleSubmition(task) {
     await createTask(task);
+    navigateTo("/");
   }
 
   template() {
     return html`
-      <h1>New Task</h1>
       <x-link to="/">Back to tasks</x-link>
-      <x-task-form data-target="taskForm"></x-task-form>
+      <hr />
+
+      <h1 class="is-size-4 my-4">New Task</h1>
+      <div class="w-700">
+        <x-task-form data-target="taskForm"></x-task-form>
+      </div>
     `;
   }
 }

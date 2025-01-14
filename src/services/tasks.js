@@ -79,7 +79,6 @@ export async function createTask(task) {
  * @param {UpdateTask} task
  */
 export async function updateTask(task) {
-  console.log(task);
   const response = await fetch(`${BASE_URL}/tasks/${task.label}`, {
     method: "PUT",
     headers: {

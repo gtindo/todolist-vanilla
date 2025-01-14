@@ -226,3 +226,8 @@ export function getPathParams(routePath, currentPath) {
 
   return params;
 }
+
+export function navigateTo(path) {
+  window.history.pushState({}, "", path);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+}

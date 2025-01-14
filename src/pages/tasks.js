@@ -2,7 +2,7 @@ import { getTasks } from "../services/tasks";
 import { createEffect, createSignal } from "../shared/signals";
 import { attachTemplate, getTargetElements, html } from "../shared/templates";
 
-class Home extends HTMLElement {
+class TasksPage extends HTMLElement {
   static targets = [
     "tasksList",
     "loader",
@@ -10,6 +10,7 @@ class Home extends HTMLElement {
     "startDate",
     "endDate",
     "filterForm",
+    "mobileFiltersBtn",
   ];
 
   constructor() {
@@ -27,19 +28,29 @@ class Home extends HTMLElement {
 
   connectedCallback() {
     attachTemplate(this, this.template());
-    this.elements = getTargetElements(this.shadowRoot, Home.targets);
+    this.elements = getTargetElements(this.shadowRoot, TasksPage.targets);
 
     // detect changes on displayed list and displays new list
     createEffect(this.displayedTasks, (tasks) => {
       this.elements.tasksList.innerHTML = "";
       const list = document.createElement("ul");
 
+      list.setAttribute("class", "m-4");
+
       tasks.forEach((task) => {
         let item = document.createElement("li");
         list.appendChild(item);
 
+        item.setAttribute("class", "m-2");
+
         const taskElement = document.createElement("x-task");
         taskElement.setAttribute("label", task.label);
+
+        // flag task as expired if end date is in the past
+        if (task.end_date && new Date(task.end_date) < new Date()) {
+          taskElement.setAttribute("expired", "true");
+        }
+
         item.appendChild(taskElement);
       });
 
@@ -63,6 +74,17 @@ class Home extends HTMLElement {
 
     this.elements.filterForm.onreset = () => {
       this.resetFilters();
+    };
+
+    this.elements.mobileFiltersBtn.onclick = () => {
+      this.elements.filterForm.classList.toggle("visible-mobile");
+      const isVisible =
+        this.elements.filterForm.classList.contains("visible-mobile");
+      if (isVisible) {
+        this.elements.mobileFiltersBtn.textContent = "Hide filters";
+      } else {
+        this.elements.mobileFiltersBtn.textContent = "Display filters";
+      }
     };
 
     this.load();
@@ -119,30 +141,68 @@ class Home extends HTMLElement {
 
   template() {
     return html`
-      <section>
-        <form data-target="filterForm">
-          <input
-            data-target="searchBar"
-            type="text"
-            placeholder="Search tasks"
-          />
-          <input data-target="startDate" type="date" />
-          <input data-target="endDate" type="date" />
-          <input type="submit" value="Filter" />
-          <input type="reset" value="Reset" />
-        </form>
+      <section class="is-flex is-justify-content-center">
+        <div>
+          <form data-target="filterForm" class="flex-responsive hidden-mobile">
+            <div class="field mx-2">
+              <label for="task-name" class="label">Task Name</label>
+              <input
+                id="task-name"
+                class="input is-normal"
+                data-target="searchBar"
+                type="text"
+                placeholder="Search tasks"
+              />
+            </div>
+
+            <div class="field mx-2">
+              <label for="start-date" class="label">Start Date</label>
+              <input
+                data-target="startDate"
+                id="start-date"
+                class="input is-normal"
+                type="date"
+              />
+            </div>
+
+            <div class="field mx-2">
+              <label for="end-date" class="label">End Date</label>
+              <input
+                data-target="endDate"
+                id="end-date"
+                class="input is-normal"
+                type="date"
+              />
+            </div>
+            <div class="field mx-2">
+              <input
+                type="submit"
+                class="button is-link inline-block mr-3"
+                value="Filter"
+              />
+              <input type="reset" class="button" value="Reset" />
+            </div>
+
+            <div class="field"></div>
+          </form>
+          <button data-target="mobileFiltersBtn" class="is-link visible-mobile">
+            Display filters
+          </button>
+        </div>
       </section>
 
-      <section>
+      <section class="is-flex is-justify-content-center m-4">
         <x-link to="/tasks/new">Create new task</x-link>
       </section>
 
-      <section>
-        <div data-target="tasksList"></div>
+      <hr />
+
+      <section class="is-flex is-justify-content-center">
+        <div data-target="tasksList" class="w-700"></div>
         <p data-target="loader">Loading...</p>
       </section>
     `;
   }
 }
 
-customElements.define("x-tasks-page", Home);
+customElements.define("x-tasks-page", TasksPage);

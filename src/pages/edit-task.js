@@ -1,5 +1,5 @@
 import { getTaskByLabel, updateTask } from "../services/tasks";
-import { getPathParams } from "../shared/router";
+import { getPathParams, navigateTo } from "../shared/router";
 import { createEffect, createSignal } from "../shared/signals";
 import { attachTemplate, getTargetElements, html } from "../shared/templates";
 import { toDateString } from "../utils/date";
@@ -60,6 +60,7 @@ class TaskDetailPage extends HTMLElement {
 
   async handleSubmition(task) {
     await updateTask(task);
+    navigateTo("/");
   }
 
   async load() {
@@ -72,11 +73,13 @@ class TaskDetailPage extends HTMLElement {
 
   template() {
     return html`
-      <h1>Task Detail</h1>
       <x-link to="/">Back to tasks</x-link>
+      <hr />
+
+      <h1 class="is-size-4 my-4">Edit Task</h1>
 
       <div data-target="loader">Loading...</div>
-      <div data-target="formContainer" style="display: none">
+      <div data-target="formContainer" class="w-700" style="display: none">
         <x-task-form data-target="taskForm" edit></x-task-form>
       </div>
     `;

@@ -1,5 +1,3 @@
-import "./styles/base.css";
-
 // Import the router component
 import "./shared/router";
 

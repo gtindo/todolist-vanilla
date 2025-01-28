@@ -1,4 +1,12 @@
-# TodoList app with vanilla js
+# Vanilla js Experiment (TodoList App)
+
+## Purpose
+
+Learn how to create some SPA components from scratch with vanilla js
+
+- Router
+- Fine grained reactivity with custom signals implementation
+- Boilerplate class for custom elements (like `LitElement`)
 
 ## Setup
 
@@ -18,7 +26,7 @@ npm install
 npm run dev
 ```
 
-It opens on port [http://localhos:5173](http://localhost:5173)
+It opens on port [http://localhost:5173](http://localhost:5173)
 
 ![rendu](./capture.png)
 
@@ -47,4 +55,4 @@ Pages are loaded dynamically with the router. Each page corresponds to a custom 
 
 - No validation for the input fields
 - No error handling for the api calls
-- FOUC (Flash of unstyled content) on the first load for some pages, because of the external css loading on shadow dom.
+- FOUC (Flash of unstyled content) on the first load for some pages, because of the external css loading on shadow dom (bulma css).
